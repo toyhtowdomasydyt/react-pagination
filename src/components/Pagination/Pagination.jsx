@@ -48,12 +48,12 @@ class Pagination extends Component {
 
   handleMoveLeft = evt => {
     evt.preventDefault();
-    this.gotoPage(this.state.currentPage - (this.pageNeighbours * 2) - 1);
+    this.gotoPage(this.state.currentPage - 1);
   }
 
   handleMoveRight = evt => {
     evt.preventDefault();
-    this.gotoPage(this.state.currentPage + (this.pageNeighbours * 2) + 1);
+    this.gotoPage(this.state.currentPage + 1);
   }
 
   fetchPageNumbers = () => {
@@ -116,25 +116,25 @@ class Pagination extends Component {
 
               if (page === LEFT_PAGE) return (
                 <li key={index} className="page-item">
-                  <a className="page-link" href="#" aria-label="Previous" onClick={this.handleMoveLeft}>
+                  <a className="page-link" href="#previos-page" aria-label="Previous" onClick={this.handleMoveLeft}>
                     <span aria-hidden="true">&laquo;</span>
-                    <span className="sr-only">Previous</span>
+                    <span className="visually-hidden-focusable">Previous</span>
                   </a>
                 </li>
               );
 
               if (page === RIGHT_PAGE) return (
                 <li key={index} className="page-item">
-                  <a className="page-link" href="#" aria-label="Next" onClick={this.handleMoveRight}>
+                  <a className="page-link" href="#next-page" aria-label="Next" onClick={this.handleMoveRight}>
                     <span aria-hidden="true">&raquo;</span>
-                    <span className="sr-only">Next</span>
+                    <span className="visually-hidden-focusable">Next</span>
                   </a>
                 </li>
               );
 
               return (
                 <li key={index} className={`page-item${currentPage === page ? ' active' : ''}`}>
-                  <a className="page-link" href="#" onClick={this.handleClick(page)}>{page}</a>
+                  <a className="page-link" href="#goto-page" onClick={this.handleClick(page)}>{page}</a>
                 </li>
               );
 
