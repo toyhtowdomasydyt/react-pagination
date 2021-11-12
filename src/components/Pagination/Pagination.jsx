@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 import {range} from '../../utils/range';
 
@@ -13,7 +13,6 @@ class Pagination extends Component {
 
     this.pageLimit = typeof pageLimit === 'number' ? pageLimit : 30;
     this.totalRecords = typeof totalRecords === 'number' ? totalRecords : 0;
-
     this.pageNeighbours = typeof pageNeighbours === 'number'
       ? Math.max(0, Math.min(pageNeighbours, 2))
       : 0;
@@ -23,7 +22,42 @@ class Pagination extends Component {
     this.state = {currentPage: 1};
   }
 
+  componentDidMount() {
+    this.gotoPage(1);
+  }
+
+  gotoPage = page => {
+    const {onPageChanged = f => f} = this.props;
+
+    const currentPage = Math.max(0, Math.min(page, this.totalPages));
+
+    const paginationData = {
+      currentPage,
+      totalPages: this.totalPages,
+      pageLimit: this.pageLimit,
+      totalRecords: this.totalRecords
+    };
+
+    this.setState({currentPage}, () => onPageChanged(paginationData));
+  }
+
+  handleClick = page => evt => {
+    evt.preventDefault();
+    this.gotoPage(page);
+  }
+
+  handleMoveLeft = evt => {
+    evt.preventDefault();
+    this.gotoPage(this.state.currentPage - (this.pageNeighbours * 2) - 1);
+  }
+
+  handleMoveRight = evt => {
+    evt.preventDefault();
+    this.gotoPage(this.state.currentPage + (this.pageNeighbours * 2) + 1);
+  }
+
   fetchPageNumbers = () => {
+
     const totalPages = this.totalPages;
     const currentPage = this.state.currentPage;
     const pageNeighbours = this.pageNeighbours;
@@ -32,6 +66,7 @@ class Pagination extends Component {
     const totalBlocks = totalNumbers + 2;
 
     if (totalPages > totalBlocks) {
+
       const startPage = Math.max(2, currentPage - pageNeighbours);
       const endPage = Math.min(totalPages - 1, currentPage + pageNeighbours);
 
@@ -65,38 +100,6 @@ class Pagination extends Component {
     }
 
     return range(1, totalPages);
-  }
-
-  componentDidMount() {
-    this.gotoPage(1);
-  }
-
-  gotoPage = page => {
-    const {onPageChanged = f => f} = this.props;
-    const currentPage = Math.max(0, Math.min(page, this.totalPages));
-    const paginationData = {
-      currentPage,
-      totalPages: this.totalPages,
-      pageLimit: this.pageLimit,
-      totalRecords: this.totalRecords
-    };
-
-    this.setState({currentPage}, () => onPageChanged(paginationData));
-  }
-
-  handleClick = page => evt => {
-    evt.preventDefault();
-    this.gotoPage(page);
-  }
-
-  handleMoveLeft = evt => {
-    evt.preventDefault();
-    this.gotoPage(this.state.currentPage - (this.pageNeighbours * 2) - 1);
-  }
-
-  handleMoveRight = evt => {
-    evt.preventDefault();
-    this.gotoPage(this.state.currentPage + (this.pageNeighbours * 2) + 1);
   }
 
   render() {
